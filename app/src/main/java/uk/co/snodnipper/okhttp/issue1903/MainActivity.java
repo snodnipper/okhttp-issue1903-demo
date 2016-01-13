@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 
     private MapView mMapView;
     private Bundle mSavedInstanceState;
-    private DownloaderImpl mDownloader;
+    private Downloader mDownloader;
     private Thread mThread = null;
 
     @Override
@@ -48,8 +48,7 @@ public class MainActivity extends Activity {
         // the map can be accessed from the layout
         mMapView = (MapView)findViewById(R.id.map);
 
-        //mMapView.addLayer(new OpenStreetMapLayer());
-        mDownloader = new DownloaderImpl(getApplicationContext());
+        mDownloader = ((TestApplication) getApplication()).getDownloadLoader();
         MapboxLayer mMapboxLayer = new MapboxLayer("OpenStreetMap", mDownloader);
         mMapView.addLayer(mMapboxLayer);
 
