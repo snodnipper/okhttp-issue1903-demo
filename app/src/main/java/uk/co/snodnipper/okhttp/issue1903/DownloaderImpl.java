@@ -5,13 +5,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 
-import com.squareup.okhttp.Cache;
-import com.squareup.okhttp.CacheControl;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +13,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
+import okhttp3.CacheControl;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okio.ByteString;
 import timber.log.Timber;
 
@@ -49,14 +48,16 @@ public class DownloaderImpl implements Downloader {
         }
 
 
-        mClient = new OkHttpClient();
         File cacheDirectory = new File(
                 rootLocation +
                         File.separator + "esri-maps-cache" + File.separator + "streaming");
         long cacheSize = 1024 * 1024 * 250L * 1024L * 1024L;
 
         mCache = new Cache(cacheDirectory, cacheSize);
-        mClient.setCache(mCache);
+
+        mClient = new OkHttpClient.Builder()
+                .cache(mCache)
+                .build();
 
         // cache control
         mCacheControl = new CacheControl.Builder()
@@ -131,19 +132,11 @@ public class DownloaderImpl implements Downloader {
             }
 
             if (resp != null && resp.body() != null) {
-                try {
-                    resp.body().close();
-                } catch (IOException e2) {
-                    Timber.e(e2, "Potential leak - cannot close body");
-                }
+                resp.body().close();
             }
         } finally {
             if (resp != null && resp.body() != null) {
-                try {
-                    resp.body().close();
-                } catch (IOException e) {
-                    Timber.e(e, "Potential leak - cannot close body");
-                }
+                resp.body().close();
             }
         }
 
