@@ -33,5 +33,5 @@ dependencies {
     compile 'com.esri.arcgis.android:arcgis-android:10.2.7'
     compile 'com.jakewharton.timber:timber:4.1.0'
     compile 'com.squareup.okio:okio:1.6.0'
-    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'com.squareup.okhttp3:okhttp:3.0.1'
 }
